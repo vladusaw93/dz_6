@@ -2,10 +2,6 @@ const ProductService = require(`../../services/products/product.service`)
 module.exports = {
 
 
-    updateProduct: (req, res) => {
-        res.end(`____put______`);
-    },
-
 
     createProducts: (req, res) => {
         res.end(ProductService.AddProduct(req.body));
@@ -15,11 +11,15 @@ module.exports = {
         console.log(ProductService.getProduct());
     },
     getoneProduct: (req, res) => {
-        ProductService.getOneProduct(req.body);
+        res.end(ProductService.getOneProduct(req.params.name));
     },
 
     deletProduct:(req, res) =>{
-        ProductService.deleteProduct(req.body);
-    }
+        res.end(ProductService.deleteProduct(req.params));
+    },
+
+        updateProduct: (req, res) =>{
+            res.end(ProductService.UpdateProduct(req.body));
+        }
 
 }
