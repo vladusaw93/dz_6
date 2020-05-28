@@ -1,17 +1,17 @@
 const {Router} = require(`express`);
 const productRouter = Router();
 
-const valid_product = require(`../../middelwarw/product/check_code_product`);
-const {productContorller} = require(`../../controllers/index`)
+const {ValidProduct} = require(`../../middelwarw/product`);
+const {productContorller} = require(`../../controllers`)
 
-productRouter.post(`/`, valid_product, productContorller.createProducts);
+productRouter.post(`/`, ValidProduct, productContorller.createProducts);
 
 productRouter.get(`/`, productContorller.getProduct);
 
-productRouter.get(`/:name`, productContorller.getoneProduct);
+productRouter.get(`/:id`, productContorller.getoneProduct);
 
-productRouter.delete(`/`, productContorller.deletProduct);
+productRouter.delete(`/:id`, productContorller.deletProduct);
 
-productRouter.put(`/`, valid_product, productContorller.updateProduct);
+productRouter.put(`/:id`, productContorller.updateProduct);
 
 module.exports = productRouter;

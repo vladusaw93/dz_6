@@ -1,25 +1,50 @@
-const ProductService = require(`../../services/products/product.service`)
+const productServices = require(`../../services/products/product.service`)
 module.exports = {
-
-
-
-    createProducts: (req, res) => {
-        res.end(ProductService.AddProduct(req.body));
-        console.log(req.body);
-    },
-    getProduct: () => {
-        console.log(ProductService.getProduct());
-    },
-    getoneProduct: (req, res) => {
-        res.end(ProductService.getOneProduct(req.params.name));
-    },
-
-    deletProduct:(req, res) =>{
-        res.end(ProductService.deleteProduct(req.params));
-    },
-
-        updateProduct: (req, res) =>{
-            res.end(ProductService.UpdateProduct(req.body));
+    getProduct: async (req, res) => {
+        try {
+            const allProduct = await productServices.getProduct();
+            res.json(allProduct);
+        } catch (e) {
+            console.log(e);
         }
+        res.end();
+    },
+    getoneProduct: async (req, res) => {
+        try {
+            const oneProduct = await productServices.getOneProduct(req.params.id);
+            res.json(oneProduct);
+        } catch (e) {
+            console.log(e);
+        }
+        res.end();
+    },
+
+    createProducts: async (req, res) => {
+        try {
+            let newProd = await productServices.AddProduct(req.body);
+            res.json(newProd);
+        } catch (e) {
+            console.log(e);
+        }
+        res.end();
+    },
+    deletProduct: async (req, res) => {
+        try {
+            await productServices.deleteProduct(req.params.id);
+        } catch (e) {
+            console.log(e);
+        }
+        res.end();
+    },
+
+    updateProduct: (req, res) => {
+        try {
+            let updatedProduct = productServices.UpdateProduct(req.params.id, req.body);
+            res.json(updatedProduct);
+        } catch (e) {
+            console.log(e);
+        }
+        res.end();
+    }
 
 }

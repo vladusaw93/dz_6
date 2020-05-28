@@ -5,7 +5,7 @@ products = [
     {name: `kovbasa`, StrihCode: 4444},
 ];
 
-class ProductService {
+class ProductOLDService {
     AddProduct(product) {
         products.push(product);
     }
@@ -25,9 +25,8 @@ class ProductService {
         }
     }
 
-    deleteProduct(product) {
-        const {name} = product;
-        const productIndex = products.findIndex(productOne => productOne.name === name);
+    deleteProduct(nameOfProduct) {
+        const productIndex = products.findIndex(productOne => productOne.name === nameOfProduct);
 
         if (productIndex > -1) {
             products.splice(productIndex, 1);
@@ -35,8 +34,6 @@ class ProductService {
     }
 
     UpdateProduct(updateProduct) {
-        console.log(updateProduct);
-
         let arr = products.map(product => {
             if (product.name === updateProduct.name) {
                 return updateProduct;
@@ -49,4 +46,4 @@ class ProductService {
     }
 }
 
-module.exports = new ProductService;
+module.exports = new ProductOLDService;
