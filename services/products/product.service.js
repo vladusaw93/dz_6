@@ -27,7 +27,7 @@ module.exports = {
         const ProductModel = DataBase.getModels(`Product`);
         let destroyProd = ProductModel.destroy({
             where: {
-                id: idOfProduct,
+                idOfProduct,
             }
         });
         return destroyProd;
@@ -37,12 +37,12 @@ module.exports = {
         const {name, code} = paramsToUpdate;
         const ProductModel = DataBase.getModels(`Product`);
         let updatedProd = ProductModel.update({
-                name: name,
-                code: code,
+                name,
+                code,
             },
             {
                 where: {
-                    id: idOfProduct,
+                    idOfProduct,
                 }
             });
         return updatedProd;
