@@ -9,9 +9,11 @@ module.exports = {
         return products;
     },
 
-    getOneProduct: async (productId) => {
+       getOneProduct: async (productId) => {
         const ProductModel = DataBase.getModels(`Product`);
-        let oneProduct = ProductModel.findByPk(productId);
+        let oneProduct = ProductModel.findOne({
+            Where: {productId}
+        })
         return oneProduct;
     },
 
