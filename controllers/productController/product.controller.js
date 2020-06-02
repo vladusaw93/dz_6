@@ -1,50 +1,62 @@
-const productServices = require(`../../services/products/product.service`)
+const {productServices} = require(`../../services`)
+const {hasher} = require(`../../helpers`)
+const {errorHandler} = require(`../../errors`)
+const {errors: {INVALIDID}} = require(`../../constants`)
+
 module.exports = {
+
     getProduct: async (req, res) => {
-        try {
-            const allProduct = await productServices.getProduct();
-            res.json(allProduct);
-        } catch (e) {
-            console.log(e);
-        }
-        res.end();
+        const allProduct = await productServices.getProduct();
+        res
+            .json(allProduct)
+            .end();
     },
-    getoneProduct: async (req, res) => {
-        try {
-            const oneProduct = await productServices.getOneProduct(req.params.id);
-            res.json(oneProduct);
-        } catch (e) {
-            console.log(e);
+
+    getoneProduct: async (req, res, next) => {
+        const {productId} = req.params;
+
+        const product = await productServices.getOneProduct(productId);
+
+        if (!product) {
+            return next(new errorHandler(INVALIDID, 404, 4041));
         }
-        res.end();
+
+        res
+            .json(product)
+            .end()
     },
 
     createProducts: async (req, res) => {
-        try {
-            let newProd = await productServices.AddProduct(req.body);
-            res.json(newProd);
-        } catch (e) {
-            console.log(e);
-        }
-        res.end();
-    },
-    deletProduct: async (req, res) => {
-        try {
-            await productServices.deleteProduct(req.params.id);
-        } catch (e) {
-            console.log(e);
-        }
+        const product = req.body;
+
+        product.kupon = await hasher(product.kupon);
+
+        await productServices.AddProduct(product);
+
         res.end();
     },
 
-    updateProduct: (req, res) => {
-        try {
-            let updatedProduct = productServices.UpdateProduct(req.params.id, req.body);
-            res.json(updatedProduct);
-        } catch (e) {
-            console.log(e);
+    deletProduct: async (req, res, next) => {
+        const {productId} = req.params;
+        const product = await productServices.getOneProduct(req.params.productId);
+
+        if (!product) {
+            return next(new errorHandler(INVALIDID, 404, 4041));
         }
+
+        await productServices.deleteProduct(productId);
+
+        res.end();
+    },
+
+    updateProduct: async (req, res) => {
+        const {productId} = req.params;
+        const product = req.body;
+
+        if (product.kupon) {
+            product.kupon = await hasher(product.kupon);
+        }
+         await productServices.UpdateProduct(productId, req.body);
         res.end();
     }
-
 }

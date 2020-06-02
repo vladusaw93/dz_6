@@ -1,5 +1,5 @@
 const express = require('express');
-const {productsRouter} = require('./routes');
+const {productsRouter, usersRouter} = require('./routes');
 
 const dataBase = require(`./DataBase`).getInstance();
 dataBase.setModels();
@@ -12,7 +12,16 @@ myApp.use(express.urlencoded());
 
 
 myApp.use(`/products`, productsRouter);
+myApp.use(`/users`, usersRouter);
 
+myApp.use('*', (err, req, res, next) => {
+    res
+        .status(err.status || 400)
+        .json({
+            message: err.message || `page no found`,
+            code: err.customCode
+        })
+})
 
 myApp.listen(6969, (err) => {
     if (err) {

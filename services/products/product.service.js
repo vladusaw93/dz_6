@@ -1,48 +1,49 @@
 const DataBase = require(`../../DataBase`).getInstance();
-
+const {moduleNamesEnum: {PRODUCT}} = require(`../../constants`)
 
 module.exports = {
 
     getProduct: async () => {
-        const ProductModel = DataBase.getModels(`Product`);
-        let products = await ProductModel.findAll({});
+        const ProductModel = DataBase.getModels(PRODUCT);
+        const products = await ProductModel.findAll({});
         return products;
     },
 
-       getOneProduct: async (productId) => {
-        const ProductModel = DataBase.getModels(`Product`);
-        let oneProduct = ProductModel.findOne({
-            Where: {productId}
-        })
-        return oneProduct;
+
+    getOneProduct: async (productId) => {
+        const ProductModel = DataBase.getModels(PRODUCT);
+        return ProductModel.findByPk(productId);
     },
 
-    AddProduct: async (product) => {
-        const ProductModel = DataBase.getModels(`Product`);
-        let newProduct = await ProductModel.create(product);
-        return newProduct;
+
+    AddProduct: (product) => {
+        const ProductModel = DataBase.getModels(PRODUCT);
+
+        return ProductModel.create(product);
     },
 
     deleteProduct: (idOfProduct) => {
-        const ProductModel = DataBase.getModels(`Product`);
-        let destroyProd = ProductModel.destroy({
+        const ProductModel = DataBase.getModels(PRODUCT);
+        return ProductModel.destroy({
             where: {
-                idOfProduct,
+                id: idOfProduct,
             }
         });
-        return destroyProd;
     },
 
     UpdateProduct: (idOfProduct, paramsToUpdate) => {
-        const {name, code} = paramsToUpdate;
+        const {name, code, title, price, kupon} = paramsToUpdate;
         const ProductModel = DataBase.getModels(`Product`);
-        let updatedProd = ProductModel.update({
-                name,
-                code,
+       const updatedProd = ProductModel.update({
+                name: name,
+                code: code,
+                title: title,
+                price: price,
+                kupon: kupon,
             },
             {
                 where: {
-                    idOfProduct,
+                    id: idOfProduct,
                 }
             });
         return updatedProd;

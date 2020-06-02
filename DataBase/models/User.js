@@ -1,5 +1,5 @@
 module.exports = (sequelize, DataTypes) => {
-    const Product = sequelize.define(`Product`,
+    const User = sequelize.define(`Users`,
         {
             id: {
                 type: DataTypes.INTEGER,
@@ -10,27 +10,25 @@ module.exports = (sequelize, DataTypes) => {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            code: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            price: {
-                type: DataTypes.INTEGER,
-                allowNull: false,
-            },
-            title: {
+            password: {
                 type: DataTypes.STRING,
                 allowNull: false,
             },
-            kupon: {
+            email: {
                 type: DataTypes.STRING,
                 allowNull: false,
+                unique: true,
             },
+            age: {
+                type: DataTypes.INTEGER,
+                allowNull: false,
+            },
+
         },
 
         {
-            tableName: `products`,
+            tableName: `users`,
             timestamps: false,
         });
-    return Product;
+    return User;
 };

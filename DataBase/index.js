@@ -7,7 +7,7 @@ module.exports = (() => {
     let instance;
 
     function InitConnection() {
-        const client = new Sequelize(`products`, `root`, `rootroot`, {
+        const client = new Sequelize(`products`, `root`, `root`, {
             host: `localhost`,
             dialect: `mysql`,
         })
