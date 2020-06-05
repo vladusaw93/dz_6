@@ -1,7 +1,13 @@
 const {productServices} = require(`../../services`)
 const {hasher} = require(`../../helpers`)
-const {errorHandler} = require(`../../errors`)
-const {errors: {INVALIDID}} = require(`../../constants`)
+const {
+    errorHandler,
+    errors: {
+        NOPRODUCT,
+    }
+} = require(`../../errors`)
+
+const {errorsStatusEnum: {UNAUTHORIZED}} = require(`../../constants`)
 
 module.exports = {
 
@@ -18,7 +24,10 @@ module.exports = {
         const product = await productServices.getOneProduct(productId);
 
         if (!product) {
-            return next(new errorHandler(INVALIDID, 404, 4041));
+            return next(new errorHandler(
+                NOPRODUCT.message,
+                UNAUTHORIZED,
+                NOPRODUCT.code));
         }
 
         res
@@ -41,7 +50,10 @@ module.exports = {
         const product = await productServices.getOneProduct(req.params.productId);
 
         if (!product) {
-            return next(new errorHandler(INVALIDID, 404, 4041));
+            return next(new errorHandler(
+                NOPRODUCT.message,
+                UNAUTHORIZED,
+                NOPRODUCT.code));
         }
 
         await productServices.deleteProduct(productId);
@@ -56,7 +68,7 @@ module.exports = {
         if (product.kupon) {
             product.kupon = await hasher(product.kupon);
         }
-         await productServices.UpdateProduct(productId, req.body);
+        await productServices.UpdateProduct(productId, req.body);
         res.end();
     }
 }

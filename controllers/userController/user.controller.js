@@ -1,8 +1,7 @@
 const {userServices} = require(`../../services`);
-const {hasher, checkHasher} = require(`../../helpers`);
-const {errorHandler} = require(`../../errors`);
-const {errors: {NOTEXIST}} = require(`../../constants`);
-
+const {hasher} = require(`../../helpers`);
+const {errorHandler, errors: {NOUSER}} = require(`../../errors`);
+const {errorsStatusEnum: {UNAUTHORIZED}} = require(`../../constants`)
 
 module.exports = {
     getUsers: async (req, res) => {
@@ -17,7 +16,10 @@ module.exports = {
         const oneUser = await userServices.getUserBuId(userId);
 
         if (!oneUser) {
-            return next(new errorHandler(INVALIDUSERID, 404, 40004));
+            return next(new errorHandler(
+                NOUSER.message,
+                UNAUTHORIZED,
+                NOUSER.code));
         }
 
         res
@@ -31,7 +33,10 @@ module.exports = {
         const user = await userServices.getUserBuId(userId);
 
         if (!user) {
-            return next(new errorHandler(INVALIDUSERID, 404, 4001));
+            return next(new errorHandler(
+                NOUSER.message,
+                UNAUTHORIZED,
+                NOUSER.code));
         }
 
         await userServices.deleteUserById(userId);
@@ -39,31 +44,18 @@ module.exports = {
     },
 
     creatUser: async (req, res) => {
-        const newUser = req.body;
+        try {
+            const newUser = req.body;
 
-        newUser.password = await hasher(newUser.password);
+            newUser.password = await hasher(newUser.password);
 
-        await userServices.creatUser(newUser);
-        res
-            .json(newUser)
-            .end();
+            await userServices.creatUser(newUser);
+            res.json(newUser);
+            res.end();
+        } catch (e) {
+            console.log(e);
+        }
+        res.end();
     },
 
-    userLogin: async (req, res, next) => {
-
-        const {email, password} = req.body;
-
-        const user = await userServices.getUserByParams({email});
-
-        if (!user) {
-            return next(new errorHandler(NOTEXIST, 404, 4001));
-
-        }
-
-        await hasher(user.password, password);
-
-        res
-            .json(user)
-            .end();
-    }
 }

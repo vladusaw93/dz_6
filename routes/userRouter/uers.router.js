@@ -1,15 +1,20 @@
 const {Router} = require(`express`);
 const userRouter = Router();
 
-const {userContorller}= require(`../../controllers`)
-const {UserMiddlowares:{ValidUser}} = require(`../../middelwarw`);
+const {userContorller} = require(`../../controllers`)
 
-userRouter.get(`/` , userContorller.getUsers);
-userRouter.post(`/`, ValidUser, userContorller.creatUser);
+const {
+    UserMiddlowares: {
+        ValidUserToCreate,
+        ValidUser
+    }
+} = require(`../../middelwarw`);
 
-userRouter.get(`/:userId` , userContorller.getUserById);
-userRouter.delete(`/:userId`, userContorller.deleteUser);
-userRouter.post(`/auth`, userContorller.userLogin);
+userRouter.get(`/`, userContorller.getUsers);
+userRouter.post(`/`, ValidUserToCreate, userContorller.creatUser);
+
+userRouter.get(`/:userId`, userContorller.getUserById);
+userRouter.delete(`/:userId`, ValidUser, userContorller.deleteUser);
 
 
 module.exports = userRouter;

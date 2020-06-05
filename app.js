@@ -1,5 +1,5 @@
 const express = require('express');
-const {productsRouter, usersRouter} = require('./routes');
+const {productsRouter, usersRouter, authorizationRouter} = require('./routes');
 
 const dataBase = require(`./DataBase`).getInstance();
 dataBase.setModels();
@@ -10,9 +10,11 @@ const myApp = express();
 myApp.use(express.json());
 myApp.use(express.urlencoded());
 
-
 myApp.use(`/products`, productsRouter);
 myApp.use(`/users`, usersRouter);
+myApp.use(`/authorization`, authorizationRouter);
+
+
 
 myApp.use('*', (err, req, res, next) => {
     res
@@ -22,6 +24,7 @@ myApp.use('*', (err, req, res, next) => {
             code: err.customCode
         })
 })
+
 
 myApp.listen(6969, (err) => {
     if (err) {

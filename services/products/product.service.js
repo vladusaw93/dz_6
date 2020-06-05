@@ -5,6 +5,7 @@ module.exports = {
 
     getProduct: async () => {
         const ProductModel = DataBase.getModels(PRODUCT);
+        console.log(ProductModel);
         const products = await ProductModel.findAll({});
         return products;
     },
